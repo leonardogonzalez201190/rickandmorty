@@ -36,3 +36,10 @@ export interface CharacterCardProps {
   isLoading?: boolean;
   onClick?: () => void;
 }
+
+export type SortOrder = "asc" | "desc" | "none";
+
+export interface OrderControlProps {
+  sortOrder: SortOrder;
+  onChange: (nextOrder: SortOrder) => void;
+}

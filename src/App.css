@@ -44,3 +44,32 @@
   gap: 16px;
   width: 100%;
 }
+
+
+.order-control:hover {
+  background: #f2f2f2;
+}
+
+.order-control:active {
+  transform: scale(0.97);
+}
+
+.characters-topbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.characters-search {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 180px;
+}
+
+.characters-topbar h2 {
+  margin: 0;
+}

@@ -6,8 +6,6 @@ import { CharactersList } from "../containers";
 export default function Home() {
   return (
     <div className="page-container">
-      {/* Characters list container */}
-      <h2>Characters List</h2>
       <CharactersList />
     </div>
   );
