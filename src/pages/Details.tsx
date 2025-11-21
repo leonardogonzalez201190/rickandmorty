@@ -2,15 +2,11 @@
 // The character ID is extracted from the URL using a custom route param parser.
 
 import { navigate } from "../routes/navigate";
-import { getRouteParam } from "../routes/getRouteParam";
 import { useRMDetail } from "../hooks/useRMDetail";
 
-export default function Details() {
-  const currentPath = window.location.pathname;
+export default function Details({ params }: { params: { id: string } }) {
 
-  // Extract the dynamic ID, e.g. from "/details/7"
-  const id = getRouteParam("/details/:id", currentPath, "id");
-
+  const { id } = params;
   const { character, loading, error } = useRMDetail(id);
 
   return (

@@ -1,10 +1,10 @@
 
 import { navigate } from "./navigate";
 import { routes } from "./routes";
-import { getRouteParam } from "./getRouteParam";
+import { resolveRoute } from "./resolveRoute";
 
 export {
     navigate,
     routes,
-    getRouteParam
+    resolveRoute
 }

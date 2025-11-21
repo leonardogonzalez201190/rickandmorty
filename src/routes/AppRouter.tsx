@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ComponentType } from "react";
-import { matchRoute } from "./matchRoute";
+import { resolveRoute } from "./resolveRoute";
 
 interface RoutesMap {
   [path: string]: ComponentType<any>;
@@ -11,9 +11,7 @@ interface AppRouterProps {
 }
 
 export default function AppRouter({ routes }: AppRouterProps) {
-  const [currentPath, setCurrentPath] = useState<string>(
-    window.location.pathname
-  );
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
     const onLocationChange = () => {
@@ -24,8 +22,9 @@ export default function AppRouter({ routes }: AppRouterProps) {
     return () => window.removeEventListener("popstate", onLocationChange);
   }, []);
 
-  const RouteComponent =
-    matchRoute(routes, currentPath) || routes["/"];
+  const resolved = resolveRoute(routes, currentPath);
+  const Component = resolved?.component || routes["/"];
+  const params = resolved?.params || {};
 
-  return <RouteComponent />;
+  return <Component params={params} />;
 }
