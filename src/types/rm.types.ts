@@ -43,3 +43,8 @@ export interface OrderControlProps {
   sortOrder: SortOrder;
   onChange: (nextOrder: SortOrder) => void;
 }
+
+export interface RMListData {
+  results: RMCharacter[];
+  info: RMApiInfo | null;
+}

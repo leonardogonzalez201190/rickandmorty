@@ -1,9 +1,12 @@
+import type { ChangeEvent } from "react";
 import { CharacterCard, CharacterCardSkeleton, OrderControl } from "../components";
 import { useRMList } from "../hooks";
 import { navigate } from "../routes";
 import type { SortOrder } from "../types/rm.types";
+import { debounce } from "../utils/debounce";
 
 export function CharactersList() {
+
   const {
     characters,
     loading,
@@ -39,17 +42,17 @@ export function CharactersList() {
 
         {/* Search */}
         <input
-          type="text"
-          placeholder="Search..."
-          className="characters-search"
-          value={searchTerm}               // 👈 conectamos el valor
-          onChange={(e) => setSearchTerm(e.target.value)}   // 👈 actualizamos el hook
-          style={{
-            padding: "8px 12px",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            minWidth: "180px",
-          }}
+            type="text"
+            placeholder="Search..."
+            className="characters-search"
+            defaultValue={searchTerm}
+            onChange={debounce((e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value), 400)}
+            style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "6px",
+                minWidth: "180px",
+            }}
         />
 
         {/* Sorting control */}

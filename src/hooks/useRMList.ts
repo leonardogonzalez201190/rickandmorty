@@ -2,9 +2,8 @@
 // Supports loading, error, sorting by name, search via API, debounce,
 // and syncs search, page, and sortOrder with the URL.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { RMCharacter, RMApiInfo, RMApiResponse, SortOrder } from "../types/rm.types";
-import { debounce } from "../utils";
 
 export function useRMList() {
   const [characters, setCharacters] = useState<RMCharacter[]>([]);
@@ -23,28 +22,6 @@ export function useRMList() {
   const [page, setPage] = useState<number>(initialPage);
   const [searchTerm, setSearchTerm] = useState<string>(initialSearch);
   const [sortOrder, setSortOrder] = useState<SortOrder>(initialSort);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>("");
-  const debounceRef = useRef<(value: string) => void>(null);
-
-
-  // Avoid resetting page on initial load
-  const isFirstSearchRun = useRef(true);
-
-  // Reset page ONLY when user changes searchTerm (not on initial load)
-  useEffect(() => {
-    if (isFirstSearchRun.current) {
-      isFirstSearchRun.current = false;
-      return; // skip initial execution
-    }
-    setPage(1);
-  }, [searchTerm]);
-
-  // Debounce search updates
-  useEffect(() => {
-    debounceRef.current = debounce((value: string) => {
-      setDebouncedSearchTerm(value);
-    }, 700);
-  }, []);
 
   // Sync search, sort and page with URL
   useEffect(() => {
@@ -74,10 +51,7 @@ export function useRMList() {
       try {
         const params = new URLSearchParams();
         params.set("page", String(page));
-
-        if (debouncedSearchTerm.trim() !== "") {
-          params.set("name", debouncedSearchTerm.trim());
-        }
+        params.set("name", searchTerm);
 
         const response = await fetch(
           `https://rickandmortyapi.com/api/character?${params.toString()}`
@@ -127,9 +101,14 @@ export function useRMList() {
     return () => {
       isMounted = false;
     };
-  }, [page, reloadToken, sortOrder, debouncedSearchTerm]);
+  }, [page, reloadToken, sortOrder, searchTerm]);
 
   const reload = () => setReloadToken((prev) => prev + 1);
+
+  function onSearchChange(value: string) {
+    setSearchTerm(value);
+    setPage(1);
+  }
 
   return {
     characters,
@@ -142,6 +121,6 @@ export function useRMList() {
     sortOrder,
     setSortOrder,
     searchTerm,
-    setSearchTerm,
+    setSearchTerm: onSearchChange,
   };
 }
