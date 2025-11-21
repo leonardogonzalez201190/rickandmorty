@@ -1,7 +1,6 @@
 // Details page: Displays detailed information for a single character.
 // The character ID is extracted from the URL using a custom route param parser.
 
-import { navigate } from "../routes/navigate";
 import { useRMDetail } from "../hooks/useRMDetail";
 
 export default function Details({ params }: { params: { id: string } }) {
@@ -13,7 +12,9 @@ export default function Details({ params }: { params: { id: string } }) {
     <div className="page-container">
       <h1>Details</h1>
 
-      <button onClick={() => navigate("/")}>Back to Home</button>
+      <button onClick={() => history.back()}>
+        ← Back
+      </button>
 
       {loading && <p>Loading character...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
