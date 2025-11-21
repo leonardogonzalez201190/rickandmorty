@@ -30,3 +30,9 @@ export interface UseRMListState {
   setPage: (page: number) => void;
   reload: () => void;
 }
+
+export interface CharacterCardProps {
+  character: RMCharacter | null;
+  isLoading?: boolean;
+  onClick?: () => void;
+}

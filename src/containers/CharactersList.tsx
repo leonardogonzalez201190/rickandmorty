@@ -1,10 +1,12 @@
 // CharactersList container: Connects the useRMList hook with the UI layer.
 // It handles loading, error and data rendering states and prepares the
 // component for future pagination, filtering and ordering features.
+
 import { useRMList } from "../hooks";
+import { CharacterCard, CharacterCardSkeleton } from "../components/rm-ui";
 
 export function CharactersList() {
-  
+
   const { characters, loading, error, page, setPage, info } = useRMList();
 
   return (loading ? <p>Loading characters...</p> : error ? <p style={{ color: "red" }}>Error: {error}</p> : (
@@ -12,12 +14,13 @@ export function CharactersList() {
       {/* Characters List */}
       {!loading && !error && (
         <div className="responsive-grid">
-          {characters.map((character) => (
-            <div key={character.id}>
-              {character.name}
-            </div>
-          ))}
-        </div>
+        {loading
+          ? Array.from({ length: 10 }).map((_, i) => <CharacterCardSkeleton key={i} />)
+          : characters.map((c) => (
+              <CharacterCard key={c.id} character={c} />
+            ))}
+      </div>
+      
       )}
 
       {/* Pagination - basic version */}

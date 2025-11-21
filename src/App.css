@@ -1,20 +1,23 @@
-/* Base page layout */
+/* Root container of the entire React app */
 #root {
-  max-width: 1200px;
-  margin: 0 auto;           /* Centers horizontally */
-  padding: 16px;            /* Mobile-friendly padding */
+  min-height: 100vh;        /* Use full viewport height */
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;      /* Center horizontally */
+  justify-content: center;  /* Centers horizontally */
+  padding: 16px;            /* Mobile-friendly spacing */
+  box-sizing: border-box;
 }
 
+/* Page wrapper */
 .page-container {
-    width: 900px;
-  height: 100vh;
+  width: 100%;
+  max-width: 1200px;        /* Limit width for better readability */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;      /* Center horizontally */
+  align-items: center;      /* Center horizontal content */
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 /* Optional: Full-page vertical centering */
