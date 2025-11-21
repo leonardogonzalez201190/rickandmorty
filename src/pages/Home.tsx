@@ -1,14 +1,14 @@
-import { navigate } from "../routes";
+// Home page: Main entry view of the application.
+// It displays the list of Rick and Morty characters using the CharactersList container.
 
-// Home page: Entry view of the application. Demonstrates navigation to the Details page
-// using the custom router logic.
+import { CharactersList } from "../containers";
+
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-      <button onClick={() => navigate("/details/1")}>
-        Go to Details of Character 1
-      </button>
+    <div className="page-container">
+      {/* Characters list container */}
+      <h2>Characters List</h2>
+      <CharactersList />
     </div>
   );
 }
