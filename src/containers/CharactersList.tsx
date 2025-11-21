@@ -4,6 +4,7 @@
 
 import { useRMList } from "../hooks";
 import { CharacterCard, CharacterCardSkeleton } from "../components/rm-ui";
+import { navigate } from "../routes";
 
 export function CharactersList() {
 
@@ -17,7 +18,7 @@ export function CharactersList() {
         {loading
           ? Array.from({ length: 10 }).map((_, i) => <CharacterCardSkeleton key={i} />)
           : characters.map((c) => (
-              <CharacterCard key={c.id} character={c} />
+              <CharacterCard key={c.id} character={c} onClick={() => navigate(`/details/${c.id}`)} />
             ))}
       </div>
       

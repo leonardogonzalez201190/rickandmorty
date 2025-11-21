@@ -1,12 +1,43 @@
-import { navigate } from "../routes";
+// Details page: Displays detailed information for a single character.
+// The character ID is extracted from the URL using a custom route param parser.
 
-// Details page: Displays detail information for a selected item.
-// Navigation back to Home is handled through the custom navigation function.
+import { navigate } from "../routes/navigate";
+import { getRouteParam } from "../routes/getRouteParam";
+import { useRMDetail } from "../hooks/useRMDetail";
+
 export default function Details() {
+  const currentPath = window.location.pathname;
+
+  // Extract the dynamic ID, e.g. from "/details/7"
+  const id = getRouteParam("/details/:id", currentPath, "id");
+
+  const { character, loading, error } = useRMDetail(id);
+
   return (
-    <div>
-      <h1>Details Page</h1>
+    <div className="page-container">
+      <h1>Details</h1>
+
       <button onClick={() => navigate("/")}>Back to Home</button>
+
+      {loading && <p>Loading character...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {!loading && character && (
+        <div style={{ marginTop: "16px", textAlign: "center" }}>
+          <img
+            src={character.image}
+            alt={character.name}
+            width={200}
+            height={200}
+            style={{ borderRadius: "12px" }}
+          />
+
+          <h2>{character.name}</h2>
+          <p><strong>Status:</strong> {character.status}</p>
+          <p><strong>Species:</strong> {character.species}</p>
+          <p><strong>Gender:</strong> {character.gender}</p>
+        </div>
+      )}
     </div>
   );
 }
