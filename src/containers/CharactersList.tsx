@@ -47,6 +47,7 @@ export function CharactersList() {
           {/* Search */}
           <input
             type="text"
+            autoFocus={true}
             placeholder="Search characters..."
             defaultValue={queryParams.name}
             onChange={debounce(
