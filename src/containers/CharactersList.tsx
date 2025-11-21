@@ -13,7 +13,10 @@ export function CharactersList() {
     info,
     sortOrder,
     setSortOrder,
+    searchTerm,
+    setSearchTerm,
   } = useRMList();
+
 
   return (
     <div style={{ width: "100%" }}>
@@ -34,11 +37,13 @@ export function CharactersList() {
         {/* Title */}
         <h2 style={{ margin: 0 }}>Characters List</h2>
 
-        {/* Search (input simple por ahora) */}
+        {/* Search */}
         <input
           type="text"
           placeholder="Search..."
           className="characters-search"
+          value={searchTerm}               // 👈 conectamos el valor
+          onChange={(e) => setSearchTerm(e.target.value)}   // 👈 actualizamos el hook
           style={{
             padding: "8px 12px",
             border: "1px solid #ccc",
@@ -80,15 +85,15 @@ export function CharactersList() {
         <div className="responsive-grid">
           {loading
             ? Array.from({ length: 10 }).map((_, i) => (
-                <CharacterCardSkeleton key={i} />
-              ))
+              <CharacterCardSkeleton key={i} />
+            ))
             : characters.map((c) => (
-                <CharacterCard
-                  key={c.id}
-                  character={c}
-                  onClick={() => navigate(`/details/${c.id}`)}
-                />
-              ))}
+              <CharacterCard
+                key={c.id}
+                character={c}
+                onClick={() => navigate(`/details/${c.id}`)}
+              />
+            ))}
         </div>
       )}
     </div>
