@@ -41,7 +41,7 @@ export function OrderControl({ sortOrder, onChange }: OrderControlProps) {
           fontSize: "14px",
         }}
       >
-        <span style={{ opacity: 0.8 }}>
+        <span aria-label="order-label" style={{ opacity: 0.8 }}>
           {sortOrder === "none"
             ? "No order"
             : sortOrder === "asc"
