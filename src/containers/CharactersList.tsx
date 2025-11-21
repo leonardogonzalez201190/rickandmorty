@@ -1,80 +1,124 @@
 import type { ChangeEvent } from "react";
-import { CharacterCard, CharacterCardSkeleton, OrderControl } from "../components";
+import {
+  CharacterCard,
+  CharacterCardSkeleton,
+  OrderControl,
+  StatusFilter,
+  SpeciesFilter,
+  GenderFilter,
+} from "../components";
 import { useRMList } from "../hooks";
 import { navigate } from "../routes";
 import type { SortOrder } from "../types/rm.types";
 import { debounce } from "../utils/debounce";
 
 export function CharactersList() {
-
   const {
     characters,
     loading,
     error,
-    page,
+    queryParams,
     setPage,
     info,
-    sortOrder,
-    setSortOrder,
-    searchTerm,
-    setSearchTerm,
+    setSort,
+    setSearch,
+    setStatus,
+    setSpecies,
+    setGender,
+    resetFilters,
   } = useRMList();
-
 
   return (
     <div style={{ width: "100%" }}>
-      {/* Top bar */}
+
+      {/* Header */}
       <div
-        className="characters-topbar"
         style={{
-          width: "100%",
           display: "flex",
+          flexDirection: "column",
+          gap: "12px",
           alignItems: "center",
-          justifyContent: "center",
-          gap: "16px",
-          flexWrap: "wrap",
           marginBottom: "24px",
-          textAlign: "center",
         }}
       >
-        {/* Title */}
-        <h2 style={{ margin: 0 }}>Characters List</h2>
+        <h2 style={{ margin: 0, fontSize: "28px" }}>Rick and Morty List</h2>
 
-        {/* Search */}
-        <input
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          {/* Search */}
+          <input
             type="text"
-            placeholder="Search..."
-            className="characters-search"
-            defaultValue={searchTerm}
-            onChange={debounce((e: ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value), 400)}
+            placeholder="Search characters..."
+            defaultValue={queryParams.name}
+            onChange={debounce(
+              (e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value),
+              400
+            )}
             style={{
-                padding: "8px 12px",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                minWidth: "180px",
+              padding: "8px 12px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
             }}
-        />
-
-        {/* Sorting control */}
-        <OrderControl
-          sortOrder={sortOrder}
-          onChange={(next: SortOrder) => setSortOrder(next)}
-        />
-
-        {/* Pagination */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <button disabled={!info?.prev} onClick={() => setPage(page - 1)}>
-            Prev
-          </button>
-
-          <span>
-            {page} / {info?.pages ?? "?"}
-          </span>
-
-          <button disabled={!info?.next} onClick={() => setPage(page + 1)}>
-            Next
-          </button>
+          />
+          <button onClick={resetFilters}>Clear Filters</button>
         </div>
+      </div>
+
+      {/* Filters Grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+          gap: "16px",
+          marginBottom: "24px",
+        }}
+      >
+        <StatusFilter value={queryParams.status} onChange={setStatus} />
+        <SpeciesFilter value={queryParams.species} onChange={setSpecies} />
+        <GenderFilter value={queryParams.gender} onChange={setGender} />
+
+        <OrderControl
+          sortOrder={queryParams.sort}
+          onChange={(next: SortOrder) => setSort(next)}
+        />
+      </div>
+
+      {/* Pagination */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "12px",
+          marginBottom: "24px",
+        }}
+      >
+        <button
+          disabled={!info?.prev}
+          onClick={() => setPage(queryParams.page - 1)}
+          style={{
+            padding: "8px 14px",
+            borderRadius: "6px",
+            cursor: info?.prev ? "pointer" : "not-allowed",
+          }}
+        >
+          Prev
+        </button>
+
+        <span style={{ fontSize: "16px", fontWeight: 500 }}>
+          {queryParams.page} / {info?.pages ?? "?"}
+        </span>
+
+        <button
+          disabled={!info?.next}
+          onClick={() => setPage(queryParams.page + 1)}
+          style={{
+            padding: "8px 14px",
+            borderRadius: "6px",
+            cursor: info?.next ? "pointer" : "not-allowed",
+          }}
+        >
+          Next
+        </button>
       </div>
 
       {/* Loading */}
@@ -86,17 +130,22 @@ export function CharactersList() {
       {/* List */}
       {!loading && !error && (
         <div className="responsive-grid">
-          {loading
-            ? Array.from({ length: 10 }).map((_, i) => (
-              <CharacterCardSkeleton key={i} />
-            ))
-            : characters.map((c) => (
-              <CharacterCard
-                key={c.id}
-                character={c}
-                onClick={() => navigate(`/details/${c.id}`)}
-              />
-            ))}
+          {characters.map((c) => (
+            <CharacterCard
+              key={c.id}
+              character={c}
+              onClick={() => navigate(`/details/${c.id}`)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Skeleton fallback */}
+      {loading && (
+        <div className="responsive-grid">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <CharacterCardSkeleton key={i} />
+          ))}
         </div>
       )}
     </div>

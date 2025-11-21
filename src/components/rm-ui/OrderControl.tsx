@@ -1,5 +1,7 @@
-// OrderControl component: A simple UI control that toggles sorting order (asc/desc/none).
-// Displays an up/down arrow and triggers a callback when the order changes.
+/**
+ * OrderControl: toggles sorting order (asc, desc, none)
+ * Redesigned to match the Select component layout.
+ */
 
 import type { OrderControlProps } from "../../types/rm.types";
 
@@ -10,30 +12,45 @@ export function OrderControl({ sortOrder, onChange }: OrderControlProps) {
     return onChange("none");
   };
 
-  const arrow = sortOrder === "asc"
-    ? "↑"
-    : sortOrder === "desc"
-    ? "↓"
-    : "↕"; // neutral symbol
+  const arrow =
+    sortOrder === "asc" ? "↑" : sortOrder === "desc" ? "↓" : "↕";
 
   return (
-    <button
-      onClick={toggleOrder}
-      className="order-control"
+    <div
       style={{
-        padding: "8px 12px",
-        borderRadius: "6px",
-        border: "1px solid #ccc",
-        background: "white",
-        cursor: "pointer",
         display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        fontSize: "14px",
+        flexDirection: "column",
+        gap: "4px",
       }}
     >
-      <span>Order by name</span>
-      <span style={{ fontSize: "16px" }}>{arrow}</span>
-    </button>
+      <label style={{ fontSize: "14px", fontWeight: 500 }}>
+        Order by Name
+      </label>
+
+      <button
+        onClick={toggleOrder}
+        style={{
+          padding: "8px 12px",
+          borderRadius: "6px",
+          border: "1px solid #ccc",
+          background: "white",
+          cursor: "pointer",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          fontSize: "14px",
+        }}
+      >
+        <span style={{ opacity: 0.8 }}>
+          {sortOrder === "none"
+            ? "No order"
+            : sortOrder === "asc"
+            ? "Ascending"
+            : "Descending"}
+        </span>
+
+        <span style={{ fontSize: "16px" }}>{arrow}</span>
+      </button>
+    </div>
   );
 }

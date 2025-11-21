@@ -1,6 +1,6 @@
 // useRMList hook: Fetches a paginated list of characters from the Rick and Morty API.
-// Supports loading, error, sorting by name, search via API, debounce,
-// and syncs search, page, and sortOrder with the URL.
+// Supports loading, error, sorting by name, search via API,
+// and syncs all query params with the URL using a single queryParams state.
 
 import { useEffect, useState } from "react";
 import type { RMCharacter, RMApiInfo, RMApiResponse, SortOrder } from "../types/rm.types";
@@ -10,37 +10,35 @@ export function useRMList() {
   const [info, setInfo] = useState<RMApiInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [reloadToken, setReloadToken] = useState<number>(0);
 
-  // Read parameters from URL on first load
+  // Read all parameters from URL on start
   const urlParams = new URLSearchParams(window.location.search);
 
-  const initialSearch = urlParams.get("name") || "";
-  const initialSort = (urlParams.get("sort") as SortOrder) || "none";
-  const initialPage = Number(urlParams.get("page")) || 1;
+  const [queryParams, setQueryParams] = useState({
+    page: Number(urlParams.get("page")) || 1,
+    name: urlParams.get("name") || "",
+    sort: (urlParams.get("sort") as SortOrder) || "none",
+    status: urlParams.get("status") || "",
+    species: urlParams.get("species") || "",
+    gender: urlParams.get("gender") || "",
+  });
 
-  const [page, setPage] = useState<number>(initialPage);
-  const [searchTerm, setSearchTerm] = useState<string>(initialSearch);
-  const [sortOrder, setSortOrder] = useState<SortOrder>(initialSort);
-
-  // Sync search, sort and page with URL
+  // Sync ALL queryParams state with the URL (one effect)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams();
 
-    if (searchTerm.trim() !== "") params.set("name", searchTerm.trim());
-    else params.delete("name");
-
-    if (sortOrder !== "none") params.set("sort", sortOrder);
-    else params.delete("sort");
-
-    if (page > 1) params.set("page", String(page));
-    else params.delete("page");
+    if (queryParams.page > 1) params.set("page", String(queryParams.page));
+    if (queryParams.name.trim() !== "") params.set("name", queryParams.name.trim());
+    if (queryParams.sort !== "none") params.set("sort", queryParams.sort);
+    if (queryParams.status) params.set("status", queryParams.status);
+    if (queryParams.species) params.set("species", queryParams.species);
+    if (queryParams.gender) params.set("gender", queryParams.gender);
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.replaceState({}, "", newUrl);
-  }, [searchTerm, sortOrder, page]);
+  }, [queryParams]);
 
-  // Fetch characters from API
+  // Fetch data from Rick & Morty API when queryParams change
   useEffect(() => {
     let isMounted = true;
 
@@ -50,8 +48,15 @@ export function useRMList() {
 
       try {
         const params = new URLSearchParams();
-        params.set("page", String(page));
-        params.set("name", searchTerm);
+
+        params.set("page", String(queryParams.page));
+
+        if (queryParams.name.trim() !== "") {
+          params.set("name", queryParams.name.trim());
+        }
+        if (queryParams.status) params.set("status", queryParams.status);
+        if (queryParams.species) params.set("species", queryParams.species);
+        if (queryParams.gender) params.set("gender", queryParams.gender);
 
         const response = await fetch(
           `https://rickandmortyapi.com/api/character?${params.toString()}`
@@ -59,7 +64,6 @@ export function useRMList() {
 
         if (!response.ok) {
           if (response.status === 404) {
-            // No results found
             if (isMounted) {
               setCharacters([]);
               setInfo(null);
@@ -67,7 +71,6 @@ export function useRMList() {
             }
             return;
           }
-
           throw new Error(`Request failed with status ${response.status}`);
         }
 
@@ -77,20 +80,19 @@ export function useRMList() {
 
         let results = [...data.results];
 
-        // Apply sorting by name
-        if (sortOrder === "asc") {
+        // SORT local
+        if (queryParams.sort === "asc") {
           results.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortOrder === "desc") {
+        } else if (queryParams.sort === "desc") {
           results.sort((a, b) => b.name.localeCompare(a.name));
         }
 
         setCharacters(results);
         setInfo(data.info);
       } catch (err) {
-        if (!isMounted) return;
         const message =
           err instanceof Error ? err.message : "Unknown error occurred";
-        setError(message);
+        if (isMounted) setError(message);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -101,26 +103,51 @@ export function useRMList() {
     return () => {
       isMounted = false;
     };
-  }, [page, reloadToken, sortOrder, searchTerm]);
+  }, [queryParams]);
 
-  const reload = () => setReloadToken((prev) => prev + 1);
+  // Helpers to update queryParams cleanly
+  const setPage = (page: number) =>
+    setQueryParams((prev) => ({ ...prev, page }));
 
-  function onSearchChange(value: string) {
-    setSearchTerm(value);
-    setPage(1);
-  }
+  const setSearch = (name: string) =>
+    setQueryParams((prev) => ({ ...prev, name, page: 1 }));
+
+  const setSort = (sort: SortOrder) =>
+    setQueryParams((prev) => ({ ...prev, sort }));
+
+  const setStatus = (status: string) =>
+    setQueryParams((prev) => ({ ...prev, status, page: 1 }));
+
+  const setSpecies = (species: string) =>
+    setQueryParams((prev) => ({ ...prev, species, page: 1 }));
+
+  const setGender = (gender: string) =>
+    setQueryParams((prev) => ({ ...prev, gender, page: 1 }));
+
+  const resetFilters = () =>
+    setQueryParams({
+      page: 1,
+      name: "",
+      sort: "none",
+      status: "",
+      species: "",
+      gender: "",
+    });
 
   return {
     characters,
     info,
     loading,
     error,
-    page,
+
+    queryParams,
+
     setPage,
-    reload,
-    sortOrder,
-    setSortOrder,
-    searchTerm,
-    setSearchTerm: onSearchChange,
+    setSearch,
+    setSort,
+    setStatus,
+    setSpecies,
+    setGender,
+    resetFilters,
   };
 }
