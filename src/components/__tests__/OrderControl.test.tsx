@@ -15,18 +15,16 @@ describe("OrderControl", () => {
 
     const button = screen.getByRole("button");
 
-    const getButtonText = () => button.textContent || "";
-
     // none → asc
     fireEvent.click(button);
-    expect(getButtonText()).toContain("Ascending");
+    expect(button).toHaveTextContent("Ascending");
 
     // asc → desc
     fireEvent.click(button);
-    expect(getButtonText()).toContain("Descending");
+    expect(button).toHaveTextContent("Descending");
 
     // desc → none
     fireEvent.click(button);
-    expect(getButtonText()).toContain("No order");
+    expect(button).toHaveTextContent("No order");
   });
 });
