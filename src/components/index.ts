@@ -1,10 +1,11 @@
 
 import { CharacterCard, CharacterCardSkeleton } from "./rm-ui/CharacterCard";
 import { OrderControl } from "./rm-ui/OrderControl";
-import { Select } from "./Select";
 import { StatusFilter } from "./rm-ui/StatusFilter";
 import { SpeciesFilter } from "./rm-ui/SpeciesFilter";
 import { GenderFilter } from "./rm-ui/GenderFilter";
+import { BackButton } from "./BackButton";
+import { Select } from "./Select";
 
 export {
     CharacterCard,
@@ -13,5 +14,6 @@ export {
     Select,
     StatusFilter,
     SpeciesFilter,
-    GenderFilter
+    GenderFilter,
+    BackButton
 };
