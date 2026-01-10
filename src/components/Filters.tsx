@@ -25,7 +25,9 @@ const STATUS = [
 
 
 export function Filters() {
+    
     const { queryParams, updateQueryParams } = useApi();
+
     return (
         <div className="filters__selects">
             <select name="gender" value={queryParams.gender} onChange={(e) => updateQueryParams({ gender: e.target.value, page: 1 })}>

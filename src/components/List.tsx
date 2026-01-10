@@ -20,7 +20,7 @@ export function List() {
                             alt={character.name}
                             style={{ width: "100%", height: "auto" }}
                         />
-                        <footer>
+                        <footer style={{ lineHeight: "normal" }}>
                             <h3>{character.name}</h3>
                             <small>{character.status}</small>
                         </footer>

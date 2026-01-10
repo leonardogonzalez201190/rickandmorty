@@ -10,8 +10,8 @@ export default function Details({ params }: { params: { id: string } }) {
   const { character, loading, error } = useRMDetail(id);
 
   return (
-    <div className="details-container">
-      <h2>Details</h2>
+    <article className="details-container">
+      <h2 style={{ padding: "16px" }}>Details</h2>
 
       <BackButton />
 
@@ -29,11 +29,13 @@ export default function Details({ params }: { params: { id: string } }) {
           />
 
           <h2>{character.name}</h2>
-          <p><strong>Status:</strong> {character.status}</p>
-          <p><strong>Species:</strong> {character.species}</p>
-          <p><strong>Gender:</strong> {character.gender}</p>
+          <footer className="details-footer">
+            <p><strong>Status:</strong> {character.status}</p>
+            <p><strong>Species:</strong> {character.species}</p>
+            <p><strong>Gender:</strong> {character.gender}</p>
+          </footer>
         </div>
       )}
-    </div>
+    </article>
   );
 }
