@@ -1,78 +1,80 @@
-/* Root container of the entire React app */
-#root {
-  min-height: 100vh;        /* Use full viewport height */
-  width: 100%;
-  display: flex;
-  justify-content: center;  /* Centers horizontally */
-  padding: 16px;            /* Mobile-friendly spacing */
-  box-sizing: border-box;
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
-/* Page wrapper */
-.page-container {
-  width: 100%;
-  max-width: 1200px;        /* Limit width for better readability */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;      /* Center horizontal content */
-  padding: 16px;
-  box-sizing: border-box;
+.header__nav {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 5px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-/* Optional: Full-page vertical centering */
-.full-center {
-  min-height: 100vh;        /* Full viewport height */
-  display: flex;
-  justify-content: center;  /* Center vertically */
-  align-items: center;      /* Center horizontally */
+.header__title {
+    margin: 0;
+    font-size: 1rem;
 }
 
-/* Responsive helpers */
-.text-center {
-  text-align: center;
+.filters {
+    display: flex;
+    justify-content: end;
+    gap: 15px;
+    padding: 5px;
 }
 
-.w-full {
-  width: 100%;
+.filters__selects {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-/* Optional grid for future character cards */
-.responsive-grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  justify-items: center;
-  align-items: center;
-  width: 100%;
+.filters__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-
-
-.order-control:hover {
-  background: #f2f2f2;
+.main-content {
+    padding: 5px;
+    height: 0;
+    flex: 1 1 auto;
+    overflow: auto;
 }
 
-.order-control:active {
-  transform: scale(0.97);
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 10%, 300px), 1fr));
+    gap: 10px;
 }
 
-.characters-topbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
+.list__item {
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 10px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
 
-.characters-search {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  min-width: 180px;
+.details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.characters-topbar h2 {
-  margin: 0;
+@media (max-width: 600px) {
+    .filters {
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+    }
 }

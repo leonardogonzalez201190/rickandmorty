@@ -3,5 +3,5 @@ import Details from "../pages/Details";
 
 export const routes = {
   "/": Home,
-  "/details/:id": Details, // now dynamic
+  "/details/:id": Details,
 };

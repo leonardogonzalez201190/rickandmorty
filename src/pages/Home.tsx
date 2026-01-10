@@ -1,12 +1,24 @@
-// Home page: Main entry view of the application.
-// It displays the list of Rick and Morty characters using the CharactersList container.
+import { List, Filters, Pagination, Header } from "../components";
 
-import { CharactersList } from "../containers";
 
 export default function Home() {
   return (
-    <div className="page-container">
-      <CharactersList />
-    </div>
+    <section className="container">
+      <header>
+        {/* Header */}
+        <Header />
+
+        {/* Filters */}
+        <nav className="filters">
+          <Filters />
+          <Pagination />
+        </nav>
+      </header>
+
+      {/* Main content */}
+      <main className="main-content">
+        <List />
+      </main>
+    </section>
   );
 }

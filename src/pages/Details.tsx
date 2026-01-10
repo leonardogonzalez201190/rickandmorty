@@ -10,7 +10,7 @@ export default function Details({ params }: { params: { id: string } }) {
   const { character, loading, error } = useRMDetail(id);
 
   return (
-    <div className="page-container">
+    <div className="details-container">
       <h2>Details</h2>
 
       <BackButton />
